@@ -3,6 +3,7 @@ from pyevolve import G1DList
 from pyevolve import Selectors
 from pyevolve import Mutators
 from pyevolve import Initializators
+from pyevolve import DBAdapters
 from random import shuffle
 from math import sqrt
 from random import uniform
@@ -58,6 +59,8 @@ def fitness_func(genome):
 pontos = open("dados_ECC1.txt").read().split('\n')
 pontos = [map(float,i.split(' ')) for i in pontos if i <> '']
 
+sqlite_adapter = DBAdapters.DBSQLite(identify="l1q2_6", resetDB=False)
+
 genome = G1DList.G1DList(6)
 genome.setParams(rangemin=1.0, rangemax=7.0)
 genome.initializator.set(Initializators.G1DListInitializatorReal)
@@ -66,8 +69,13 @@ genome.crossover.set(L1Q2ArithCrossover)
 genome.evaluator.set(fitness_func)
 
 ga = GSimpleGA.GSimpleGA(genome)
-ga.selector.set(Selectors.GTournamentSelector)
-ga.setGenerations(7000)
+ga.terminationCriteria.set(GSimpleGA.ConvergenceCriteria)
+#ga.selector.set(Selectors.GTournamentSelector)
+ga.setPopulationSize(100)
+ga.setGenerations(200)
+ga.setCrossoverRate(0.9)
+ga.setMutationRate(0.02)
+ga.setDBAdapter(sqlite_adapter)
 
 ga.evolve(freq_stats = 1)
 
