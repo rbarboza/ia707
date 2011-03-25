@@ -15,7 +15,7 @@ import pylab
 import psyco
 psyco.full()
 
-NUM_GROUPS = 3
+NUM_GROUPS = 6
 
 def L1Q2ArithCrossover(genome, **args):
     sister = None
@@ -51,17 +51,17 @@ def fitness_func(genome):
         try:
             l.append(min(map(distance, centroid, [point]*NUM_GROUPS)))
         except:
-            print genome,medoid,[point]*NUM_GROUPS
+            print genome,centroid,[point]*NUM_GROUPS
 
-    return 1.0/reduce(lambda a,b: a+b, l, 0.0)
+    return 1000.0/reduce(lambda a,b: a+b, l, 0.0)
 
 
 pontos = open("dados_ECC1.txt").read().split('\n')
 pontos = [map(float,i.split(' ')) for i in pontos if i <> '']
 
-sqlite_adapter = DBAdapters.DBSQLite(identify="l1q2_6", resetDB=False)
+sqlite_adapter = DBAdapters.DBSQLite(identify="l1q2_1", resetDB=False)
 
-genome = G1DList.G1DList(6)
+genome = G1DList.G1DList(12)
 genome.setParams(rangemin=1.0, rangemax=7.0)
 genome.initializator.set(Initializators.G1DListInitializatorReal)
 genome.mutator.set(Mutators.G1DListMutatorRealGaussian)
@@ -70,7 +70,7 @@ genome.evaluator.set(fitness_func)
 
 ga = GSimpleGA.GSimpleGA(genome)
 ga.terminationCriteria.set(GSimpleGA.ConvergenceCriteria)
-#ga.selector.set(Selectors.GTournamentSelector)
+ga.selector.set(Selectors.GTournamentSelector)
 ga.setPopulationSize(100)
 ga.setGenerations(200)
 ga.setCrossoverRate(0.9)
@@ -92,13 +92,14 @@ for ponto in pontos:
 get_x = lambda x: x[0]
 get_y = lambda x: x[1]
 
-print len(grupo[0]), len(grupo[1]), len(grupo[2])
+print len(grupo[0]), len(grupo[1]), len(grupo[2]), len(grupo[3]), len(grupo[4]), len(grupo[5]), 
+print centroids
 
-pylab.plot(map(get_x,grupo[0]),map(get_y,grupo[0]), 'b.', centroids[0][0],centroids[0][1],'bo',\
-           map(get_x,grupo[1]),map(get_y,grupo[1]), 'r.', centroids[1][0],centroids[1][1],'ro',\
-           map(get_x,grupo[2]),map(get_y,grupo[2]), 'g.', centroids[2][0],centroids[2][1],'go',\
-#          map(get_x,grupo[3]),map(get_y,grupo[3]), 'm.', centroids[3][0],centroids[3][1],'mo',\
-#          map(get_x,grupo[4]),map(get_y,grupo[4]), 'y.', centroids[4][0],centroids[4][1],'yo',\
-#          map(get_x,grupo[5]),map(get_y,grupo[5]), 'k.', centroids[5][0],centroids[5][1],'ko'\
+pylab.plot(map(get_x,grupo[0]),map(get_y,grupo[0]), 'b>', centroids[0][0],centroids[0][1],'bo',\
+           map(get_x,grupo[1]),map(get_y,grupo[1]), 'r<', centroids[1][0],centroids[1][1],'ro',\
+           map(get_x,grupo[2]),map(get_y,grupo[2]), 'g^', centroids[2][0],centroids[2][1],'go',\
+          map(get_x,grupo[3]),map(get_y,grupo[3]), 'mv', centroids[3][0],centroids[3][1],'mo',\
+          map(get_x,grupo[4]),map(get_y,grupo[4]), 'y.', centroids[4][0],centroids[4][1],'yo',\
+          map(get_x,grupo[5]),map(get_y,grupo[5]), 'k*', centroids[5][0],centroids[5][1],'ko'\
           )
 pylab.show()

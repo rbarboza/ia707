@@ -34,11 +34,11 @@ def fitness_func(genome):
 pontos = open("dados_ECC1.txt").read().split('\n')
 pontos = [map(float,i.split(' ')) for i in pontos if i <> '']
 
-sqlite_adapter = DBAdapters.DBSQLite(identify="l1q3_6", resetDB=False)
+sqlite_adapter = DBAdapters.DBSQLite(identify="l1q3_1", resetDB=True)
 
 genome = G1DList.G1DList(60)
 genome.initializator.set(Initializators.G1DListInitializatorInteger)
-genome.setParams(rangemin=0, rangemax=5)
+genome.setParams(rangemin=0, rangemax=2)
 genome.mutator.set(Mutators.G1DListMutatorIntegerRange)
 genome.crossover.set(Crossovers.G1DListCrossoverUniform)
 genome.evaluator.set(fitness_func)
@@ -47,7 +47,7 @@ ga = GSimpleGA.GSimpleGA(genome)
 ga.terminationCriteria.set(GSimpleGA.ConvergenceCriteria)
 #ga.selector.set(Selectors.GTournamentSelector)
 ga.setPopulationSize(100)
-ga.setGenerations(500)
+ga.setGenerations(200)
 ga.setCrossoverRate(0.9)
 ga.setMutationRate(0.02)
 ga.setDBAdapter(sqlite_adapter)
@@ -68,11 +68,8 @@ get_y = lambda x: x[1]
 
 print len(grupos[0]), len(grupos[1]), len(grupos[2])
 
-pylab.plot(map(get_x,grupos[0]),map(get_y,grupos[0]), 'b.', \
-           map(get_x,grupos[1]),map(get_y,grupos[1]), 'r.', \
-           map(get_x,grupos[2]),map(get_y,grupos[2]), 'g.', \
-           map(get_x,grupos[3]),map(get_y,grupos[3]), 'm.', \
-           map(get_x,grupos[4]),map(get_y,grupos[4]), 'y.', \
-           map(get_x,grupos[5]),map(get_y,grupos[5]), 'k.', \
+pylab.plot(map(get_x,grupos[0]),map(get_y,grupos[0]), 'b<', \
+           map(get_x,grupos[1]),map(get_y,grupos[1]), 'r>', \
+           map(get_x,grupos[2]),map(get_y,grupos[2]), 'gv', \
           )
 pylab.show()

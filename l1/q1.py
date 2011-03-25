@@ -86,13 +86,13 @@ def fitness_func(genome):
         except:
             print genome,medoid,[point]*NUM_GROUPS
 
-    return 1.0/reduce(lambda a,b: a+b, l, 0.0)
+    return 1000.0/reduce(lambda a,b: a+b, l, 0.0)
 
 
 pontos = open("dados_ECC1.txt").read().split('\n')
 pontos = [map(float,i.split(' ')) for i in pontos if i <> '']
 
-sqlite_adapter = DBAdapters.DBSQLite(identify="l1q1_6", resetDB=False)
+sqlite_adapter = DBAdapters.DBSQLite(identify="l1q1_1", resetDB=False)
 
 genome = G1DBinaryString.G1DBinaryString(60)
 genome.initializator.set(L1Q1Initializator)
@@ -102,7 +102,7 @@ genome.evaluator.set(fitness_func)
 
 ga = GSimpleGA.GSimpleGA(genome)
 ga.terminationCriteria.set(GSimpleGA.ConvergenceCriteria)
-#ga.selector.set(Selectors.GTournamentSelector)
+ga.selector.set(Selectors.GTournamentSelector)
 ga.setPopulationSize(100)
 ga.setGenerations(200)
 ga.setCrossoverRate(0.9)
@@ -126,12 +126,10 @@ get_x = lambda x: x[0]
 get_y = lambda x: x[1]
 
 print fitness_func(ga.bestIndividual().genomeString)
+print medoides
 
-pylab.plot(map(get_x,grupo[0]),map(get_y,grupo[0]), 'b.', medoides[0][0],medoides[0][1],'bo',\
-           map(get_x,grupo[1]),map(get_y,grupo[1]), 'r.', medoides[1][0],medoides[1][1],'ro',\
-           map(get_x,grupo[2]),map(get_y,grupo[2]), 'g.', medoides[2][0],medoides[2][1],'go',\
-#          map(get_x,grupo[3]),map(get_y,grupo[3]), 'm.', medoides[3][0],medoides[3][1],'mo',\
-#          map(get_x,grupo[4]),map(get_y,grupo[4]), 'y.', medoides[4][0],medoides[4][1],'yo',\
-#          map(get_x,grupo[5]),map(get_y,grupo[5]), 'k.', medoides[5][0],medoides[5][1],'ko'\
+pylab.plot(map(get_x,grupo[0]),map(get_y,grupo[0]), 'b<', medoides[0][0],medoides[0][1],'bs',\
+           map(get_x,grupo[1]),map(get_y,grupo[1]), 'r>', medoides[1][0],medoides[1][1],'rs',\
+           map(get_x,grupo[2]),map(get_y,grupo[2]), 'g^', medoides[2][0],medoides[2][1],'gs',\
           )
 pylab.show()
